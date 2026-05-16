@@ -56,6 +56,7 @@ class _CountryCardState extends State<CountryCard>
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              // Flag takes more height: 160 instead of 130
               Hero(
                 tag: 'flag_${widget.country.cca2}',
                 child: ClipRRect(
@@ -64,54 +65,63 @@ class _CountryCardState extends State<CountryCard>
                   ),
                   child: Image.network(
                     widget.country.flagUrl,
-                    height: 130,
+                    height: 180,
                     width: double.infinity,
                     fit: BoxFit.cover,
                     errorBuilder: (_, __, ___) => Container(
-                      height: 130,
+                      height: 160,
                       color: Colors.grey.shade200,
                       child: const Icon(Icons.flag),
                     ),
                   ),
                 ),
               ),
-              const SizedBox(height: 12),
+              // Reduced padding and spacing
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: Text(
-                  widget.country.name,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  textAlign: TextAlign.center,
+                padding: const EdgeInsets.fromLTRB(8, 12, 8, 8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      widget.country.name,
+                      style: const TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      widget.country.capital,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        color: Color(AppColors.secondaryText),
+                      ),
+                      textAlign: TextAlign.center,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 6),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(
+                          Icons.people,
+                          size: 15,
+                          color: Color(AppColors.accentGold),
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          '${(widget.country.population / 1000000).toStringAsFixed(1)}M',
+                          style: const TextStyle(fontSize: 12),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(height: 4),
-              Text(
-                widget.country.capital,
-                style: const TextStyle(
-                  fontSize: 12,
-                  color: Color(AppColors.secondaryText),
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 8),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(
-                    Icons.people,
-                    size: 14,
-                    color: Color(AppColors.accentGold),
-                  ),
-                  const SizedBox(width: 4),
-                  Text(
-                    '${(widget.country.population / 1000000).toStringAsFixed(1)}M',
-                  ),
-                ],
-              ),
-              const SizedBox(height: 12),
             ],
           ),
         ),

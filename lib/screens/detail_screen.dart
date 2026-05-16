@@ -85,6 +85,55 @@ class _DetailScreenState extends State<DetailScreen> {
       await launchUrl(url, mode: LaunchMode.externalApplication);
   }
 
+  void _openWikipedia() async {
+    final url = Uri.parse(
+      'https://en.wikipedia.org/wiki/${widget.country.name}',
+    );
+    if (await canLaunchUrl(url))
+      await launchUrl(url, mode: LaunchMode.externalApplication);
+  }
+
+  // Accurate dynamic about text using API data
+  String _getAboutText() {
+    final name = widget.country.name;
+    final region = widget.country.region;
+    final capital = widget.country.capital;
+    final area = widget.country.area;
+    final areaStr = area != null
+        ? '${area.toStringAsFixed(0)} km²'
+        : 'a vast area';
+    final populationM = (widget.country.population / 1000000).toStringAsFixed(
+      1,
+    );
+    final languages = widget.country.languages.join(', ');
+    final timezone = widget.country.timezones.first;
+
+    String description =
+        '$name is a country located in $region. Its capital is $capital, a center of culture and administration. '
+        'Spanning $areaStr, the country is home to approximately $populationM million people. '
+        'Official languages include $languages. The primary timezone is $timezone. ';
+
+    // Region-based context (still factual)
+    if (region == 'Africa') {
+      description +=
+          'Africa is known for its diverse wildlife, ancient civilizations, and vibrant cultures. $name contributes to this rich heritage. ';
+    } else if (region == 'Asia') {
+      description +=
+          'Asia is the largest continent, blending ancient traditions with modern innovation. $name showcases this dynamic spirit. ';
+    } else if (region == 'Europe') {
+      description +=
+          'Europe is renowned for its historical landmarks, art, and culinary excellence. $name offers a unique piece of European heritage. ';
+    } else if (region == 'Americas') {
+      description +=
+          'The Americas stretch from north to south, featuring diverse ecosystems and bustling cities. $name is a key part of this continent. ';
+    } else if (region == 'Oceania') {
+      description +=
+          'Oceania is famous for its island nations, coral reefs, and relaxed lifestyle. $name is a gem in this region. ';
+    }
+
+    return description;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -226,20 +275,16 @@ class _DetailScreenState extends State<DetailScreen> {
                   ),
                   const SizedBox(height: 24),
 
-                  // About Section
+                  // About Section (accurate from API)
                   const Text(
                     'About',
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 8),
-                  Text(
-                    '${widget.country.name} is located in ${widget.country.region}. The capital city is ${widget.country.capital}. '
-                    'Official languages include ${widget.country.languages.join(", ")}.',
-                    style: const TextStyle(height: 1.5),
-                  ),
+                  Text(_getAboutText(), style: const TextStyle(height: 1.5)),
                   const SizedBox(height: 24),
 
-                  // Interesting Facts Card
+                  // Interesting Facts Card (from API-generated list)
                   const Text(
                     'Interesting Facts',
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -276,10 +321,7 @@ class _DetailScreenState extends State<DetailScreen> {
                   ),
                   const SizedBox(height: 24),
 
-                  // Special: Famous Food, Greeting, Nickname (mock data for demo)
-                  const SizedBox(height: 24),
-
-                  // Details Grid
+                  // Additional Details (Languages, Timezone, etc.)
                   const Text(
                     'Details',
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -288,8 +330,25 @@ class _DetailScreenState extends State<DetailScreen> {
                   _detailRow('Languages', widget.country.languages.join(', ')),
                   _detailRow('Timezone', widget.country.timezones.first),
                   _detailRow('Region', widget.country.region),
-                  _detailRow('Driving Side', 'Right'), // Placeholder
+                  _detailRow(
+                    'Driving Side',
+                    'Right',
+                  ), // API doesn't provide, kept as placeholder
                   _detailRow('Calling Code', widget.country.callingCode),
+                  const SizedBox(height: 24),
+
+                  // Wikipedia button for accurate cultural info
+                  SizedBox(
+                    width: double.infinity,
+                    child: OutlinedButton.icon(
+                      onPressed: _openWikipedia,
+                      icon: const Icon(Icons.public),
+                      label: const Text('Learn More on Wikipedia'),
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                      ),
+                    ),
+                  ),
                   const SizedBox(height: 24),
 
                   // Editable Note Card
@@ -412,37 +471,4 @@ class _DetailScreenState extends State<DetailScreen> {
       ],
     ),
   );
-
-  Widget _highlightRow(IconData icon, String label, String value) => Row(
-    children: [
-      Icon(icon, size: 20, color: const Color(AppColors.accentGold)),
-      const SizedBox(width: 12),
-      Expanded(
-        child: Text(label, style: const TextStyle(fontWeight: FontWeight.w500)),
-      ),
-      Text(value),
-    ],
-  );
-
-  // Mock data for demo – replace with real API if available
-  String _getFood(String name) {
-    if (name == 'Japan') return 'Sushi';
-    if (name == 'Italy') return 'Pizza';
-    if (name == 'Ethiopia') return 'Injera';
-    return 'Local cuisine';
-  }
-
-  String _getGreeting(String name) {
-    if (name == 'Japan') return 'Konnichiwa (こんにちは)';
-    if (name == 'France') return 'Bonjour';
-    if (name == 'Ethiopia') return 'Selam (ሰላም)';
-    return 'Hello';
-  }
-
-  String _getNickname(String name) {
-    if (name == 'Japan') return 'Land of the Rising Sun';
-    if (name == 'Canada') return 'The Great White North';
-    if (name == 'Ethiopia') return 'Land of Origins';
-    return 'Beautiful Country';
-  }
 }
