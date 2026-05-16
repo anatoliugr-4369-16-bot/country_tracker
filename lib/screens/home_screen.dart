@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/country_provider.dart';
-import '../widgets/country_card.dart';
 import '../widgets/search_bar.dart';
 import '../widgets/filter_chips.dart';
 import '../widgets/loading_widget.dart';
 import '../widgets/error_widget.dart';
 import '../widgets/empty_state.dart';
+import '../widgets/country_card.dart';
 import 'detail_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -80,7 +80,15 @@ class _HomeScreenState extends State<HomeScreen> {
                     ? const EmptyStateWidget(
                         message: 'No countries match your search',
                       )
-                    : ListView.builder(
+                    : GridView.builder(
+                        padding: const EdgeInsets.all(12),
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              childAspectRatio: 0.75,
+                              crossAxisSpacing: 12,
+                              mainAxisSpacing: 12,
+                            ),
                         itemCount: provider.countries.length,
                         itemBuilder: (ctx, index) {
                           final country = provider.countries[index];

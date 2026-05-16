@@ -6,11 +6,14 @@ import '../core/constants.dart';
 class ApiService {
   Future<List<Country>> fetchAllCountries() async {
     try {
-      final response = await http.get(
-        Uri.parse(
-          '${AppConstants.apiBaseUrl}${AppConstants.allCountriesEndpoint}',
-        ),
+      // Request exactly 10 fields (API limit)
+      final fields =
+          'name,capital,population,region,flags,area,languages,timezones,cca2,currencies';
+      final url = Uri.parse(
+        '${AppConstants.apiBaseUrl}${AppConstants.allCountriesEndpoint}?fields=$fields',
       );
+
+      final response = await http.get(url);
 
       if (response.statusCode == 200) {
         List<dynamic> body = json.decode(response.body);
