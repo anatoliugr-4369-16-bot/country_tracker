@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../providers/country_provider.dart';
 import '../widgets/empty_state.dart';
 import '../core/constants.dart';
+import 'detail_screen.dart';
 
 class FavoritesScreen extends StatelessWidget {
   const FavoritesScreen({super.key});
@@ -62,10 +63,11 @@ class FavoritesScreen extends StatelessWidget {
                         (c) => c.cca2 == fav['countryCode'],
                         orElse: () => throw Exception('Country not found'),
                       );
-                      Navigator.pushNamed(
+                      Navigator.push(
                         context,
-                        '/detail',
-                        arguments: country,
+                        MaterialPageRoute(
+                          builder: (_) => DetailScreen(country: country),
+                        ),
                       );
                     },
                   ),

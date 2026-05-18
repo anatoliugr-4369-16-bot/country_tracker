@@ -47,17 +47,32 @@ class _DetailScreenState extends State<DetailScreen> {
   }
 
   void _saveNote() async {
-    final newNote = _noteController.text;
-    setState(() => note = newNote);
-    if (isFav) {
-      await context.read<CountryProvider>().updateNote(
-        widget.country.cca2,
-        newNote,
-      );
+    try {
+      final newNote = _noteController.text;
+      final provider = context.read<CountryProvider>();
+
+      // Auto-add to favorites if not already favorited and note is not empty
+      if (!isFav && newNote.isNotEmpty) {
+        await provider.addToFavorites(widget.country, note: newNote);
+        setState(() => isFav = true);
+      } else if (isFav) {
+        await provider.updateNote(widget.country.cca2, newNote);
+      }
+
+      setState(() => note = newNote);
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Note saved successfully')),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error saving note: $e')));
+      }
     }
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(const SnackBar(content: Text('Note saved')));
   }
 
   void _deleteNote() {

@@ -56,7 +56,7 @@ class _CountryCardState extends State<CountryCard>
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // Flag takes more height: 160 instead of 130
+              // Compact flag size to reduce card height
               Hero(
                 tag: 'flag_${widget.country.cca2}',
                 child: ClipRRect(
@@ -65,51 +65,51 @@ class _CountryCardState extends State<CountryCard>
                   ),
                   child: Image.network(
                     widget.country.flagUrl,
-                    height: 180,
+                    height: 100,
                     width: double.infinity,
                     fit: BoxFit.cover,
                     errorBuilder: (_, __, ___) => Container(
-                      height: 160,
+                      height: 100,
                       color: Colors.grey.shade200,
                       child: const Icon(Icons.flag),
                     ),
                   ),
                 ),
               ),
-              // Reduced padding and spacing
+              // Text content with tighter padding
               Padding(
-                padding: const EdgeInsets.fromLTRB(8, 12, 8, 8),
+                padding: const EdgeInsets.fromLTRB(8, 8, 8, 6),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
                       widget.country.name,
                       style: const TextStyle(
-                        fontSize: 22,
+                        fontSize: 17,
                         fontWeight: FontWeight.bold,
                       ),
                       textAlign: TextAlign.center,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    const SizedBox(height: 4),
+                    const SizedBox(height: 2),
                     Text(
                       widget.country.capital,
                       style: const TextStyle(
-                        fontSize: 18,
+                        fontSize: 14,
                         color: Color(AppColors.secondaryText),
                       ),
                       textAlign: TextAlign.center,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    const SizedBox(height: 6),
+                    const SizedBox(height: 4),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         const Icon(
                           Icons.people,
-                          size: 15,
+                          size: 14,
                           color: Color(AppColors.accentGold),
                         ),
                         const SizedBox(width: 4),
